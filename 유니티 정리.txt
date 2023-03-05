@@ -1,0 +1,119 @@
+Mesh Renderer를 끄면 겉보기만 감춰짐 (collider는 그대로 남아있음)
+
+프리펩(Prefab) : 게임오브젝트를 에셋으로 보관한 형태
+
+Player에 필요한 컴포넌트 : Collider + Rigidbody + Script
+
+Input 값은 Edit > Project Settings > Input Manager에서 변경 가능
+
+GetAxisRaw() : Axis 값을 정수로 반환하는 함수
+normalized : 방향 값이 1로 보정된 벡터 (대각선도 속도 같게)
+
+transform 이동은 Time.deltaTime 곱해주기
+
+Player가 관성에 의해 안 엎어지게 하려면 Rigidbody > Constraints > Freeze Rotation X, Z 체크
+
+transform 이동은 물리 충돌을 무시하는 경우가 발생
+-> Rigidbody > Collision Detection을 Continuous로 변경
+( Static과 충돌할 때 효과적 )
+
+애니메이터 사용시
+애니메이션 상태 사이를 Transition 으로 연결
+파라메터(매개변수) 추가
+파라메터를 Condition에 사용하여 Transition 완성
+
+LookAt() : 지정된 벡터를 향해서 회전시켜주는 함수
+        // 우리가 나아가는 방향으로 바라본다.
+        transform.LookAt(transform.position + moveVec);
+
+코드 기능에 따라 구분되게 함수로 분리하기
+
+키보드를 누르고 있을 때
+Input.GetButton();
+키보드를 누른 그 순간만
+Input.GetButtonDown();
+
+AddForce() 함수로 물리적인 힘을 가하기
+OnCollisionEnter() 이벤트 함수로 착지 구현
+
+일회성 애니메이션은 Trigger 파라메터 사용
+
+중력 설정
+Edit > Project Settings > Physics
+
+바닥 Rigidbody 설정
+Use Gravity 체크 해제
+Is Kinematic 체크 ( 직접 움직이지 않는 한 안 움직임 )
+
+마찰력이 없는 벽을 만들기 위해 Physics Material 추가
+
+Invoke() 함수로 시간차 함수 호출
+
+오브젝트 꾸미기
+- Light
+	Type : Point
+	Range : 빛의범위
+	Color : 빛의 색깔
+	Intensity : 빛의 강도
+- Particle System
+	Renderer : Material 찾아서 연결
+	(색상이 자홍색 이면 재질을 못 찾았다는 의미)
+	(Default-Line 연결)
+	Emission : 파티클 입자 출력양
+	Shape : 파티클 입자 출력 모양
+	Color Over Life Time : 시간에 따른 색상변화
+	(아래쪽은 색, 위쪽은 투명도)
+	Size Over Life Time : 시간에 따른 크기변화
+	Limit Velocity over Life Time : 시간에 따른 속도제한
+	(Drag값 조정해서 퍼지는 범위 결정)
+	Start Life Time : 입자 생존 시간
+	Start Speed : 입자 시작 속도
+
+상호작용 위한 Collider는 꼭 IsTrigger 체크
+
+OnTriggerEnter : trigger 달린 놈이랑 접촉하면
+OnTriggerStay : trigger 달린 놈이랑 접촉 중이면
+OnTriggerExit : 접촉에서 벗어나면
+
+프리팹 위치는 항상 0으로 초기화
+
+캐릭터가 물건 손에 들게 하려면
+해당 위치에 Creat 3D Object한 후 물건 프리펩 끌어다 놓기
+
+Trail Renderer : 잔상을 그려주는 컴포넌트
+	Width Curve : 꼬리 모양 내도록 넓이 설정
+	Time : 잔상의 길이
+	Min Vertex Distance : 잔상 꺾임을 설정
+	Color : 잔상 색상
+
+코루틴 함수 : 메인루틴 + 코루틴 (동시 실행)
+	StartCoroutine("") : 코루틴 실행 함수
+	StartCoroutine("") : 코루틴 중단 함수
+	IEnumerator : 열거형 함수 클래스
+	yield : 결과를 전달하는 키워드
+		- yield 키워드를 여러개 사용하여 시간차 로직 작성 가능
+		- WaitForSeconds() : 주어진 수치만큼 기다리는 함수
+		- yield break로 코루틴 탈출
+
+프리펩 인스턴스 생성
+GameObject instant = Instantiate(프리펩, 위치, 각도);
+
+Rigidbody 메서드
+	- AddForce() : 힘 가하기
+	- AddTorque() : 회전 시키기
+			
+마우스에 의한 캐릭터 회전 구현
+            // ScreenPointToRay() : 스크린에서 월드로 Ray를 쏘는 함수
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            // RaycastHit 정보를 저장할 변수 추가
+            RaycastHit rayHit;
+            // out : return처럼 반환값을 주어진 변수에 저장하는 키워드
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
+                // RayCastHit의 마우스 클릭 위치 활용하여 회전을 구현
+                Vector3 nextVec = rayHit.point - transform.position;
+                transform.LookAt(transform.position + nextVec);
+            }
+
+
+
