@@ -115,5 +115,13 @@ Rigidbody 메서드
                 transform.LookAt(transform.position + nextVec);
             }
 
+Rigidbody
+AngularVelocity : 물리 회전 속도
 
+Edit > Physics > Layer Collsion Masks : 레이어들의 상호간 충돌 설정
 
+벽 관통 방지
+DrawRay(시작 위치, 쏘는 방향, 색깔) : Scene내에서 Ray를 보여주는 함수
+Raycast(시작 위치, 방향, 길이, 레이어마스크) : Ray를 쏘아 닿는 오브젝트를 감지하는 함수
+
+Material은  Mesh Renderer 컴포넌트에서 접근 가능

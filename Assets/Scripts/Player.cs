@@ -34,6 +34,8 @@ public class Player : MonoBehaviour
     bool isSwap; // 교체 시간차를 위한 플래그 로직 작성
     bool isFireReady = true;
     bool isReload;
+    bool isBorder;
+
 
     Vector3 moveVec;
     Vector3 dodgeVec;
@@ -107,7 +109,8 @@ public class Player : MonoBehaviour
             moveVec = Vector3.zero;
         }
 
-        transform.position += moveVec * speed * (wDown ? 0.3f : 1f) * Time.deltaTime;
+        if (!isBorder)  // 벽의 경계에 닿으면
+            transform.position += moveVec * speed * (wDown ? 0.3f : 1f) * Time.deltaTime;
 
         anim.SetBool("isRun", moveVec != Vector3.zero);
         anim.SetBool("isWalk", wDown);
@@ -276,7 +279,22 @@ public class Player : MonoBehaviour
             }
         }
     }
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
+        isBorder = Physics.Raycast(transform.position, transform.forward, 5, LayerMask.GetMask("Wall"));
+    }
 
+    void FreezeRotation ()
+    {
+        rigid.angularVelocity = Vector3.zero; // 계속 회전력을 0으로 만들기 때문에 탄피에 의해 플레이어가 회전하는 것을 방지
+    }
+
+    void FixedUpdate()
+    {
+        StopToWall();
+        FreezeRotation();
+    }
 
     // OnCollisionEnter() 이벤트 함수로 착지 구현
     private void OnCollisionEnter(Collision collision)
