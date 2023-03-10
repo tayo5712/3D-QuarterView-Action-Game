@@ -1,3 +1,4 @@
+using Newtonsoft.Json.Bson;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,12 +11,18 @@ public class Player : MonoBehaviour
     public bool[] hasWeapons;
     public GameObject[] grenades;
     public int hasGrenades;
+    public GameObject grenadeObj;
     // 플레이어에 메인카메라 변수를 만들고 할당하기
     public Camera followCamera;
 
     public int ammo;
     public int coin;
     public int health;
+
+    public int maxAmmo;
+    public int maxCoin;
+    public int maxHealth;
+    public int maxHasGrenades;
     
     float hAxis;
     float vAxis;
@@ -23,6 +30,7 @@ public class Player : MonoBehaviour
     bool wDown;
     bool jDown;
     bool fDown;
+    bool gDown;
     bool rDown;
     bool iDown;
     bool sDown1;
@@ -71,6 +79,7 @@ public class Player : MonoBehaviour
         Turn();
         Jump();
         Attack();
+        Grenade();
         Reload();
         Dodge();
         Interaction();
@@ -87,6 +96,7 @@ public class Player : MonoBehaviour
         jDown = Input.GetButtonDown("Jump");
         // 키보드를 누른 순간만 GetButtonDown
         fDown = Input.GetButton("Fire1");
+        gDown = Input.GetButton("Fire2");
         rDown = Input.GetButtonDown("Reload");
 
         iDown = Input.GetButtonDown("Interaction");
@@ -170,6 +180,36 @@ public class Player : MonoBehaviour
                 equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot"
                 );
             fireDelay = 0;  // 공격딜레이는 0으로 돌려서 다음 공격까지 기다리도록 작성
+        }
+    }
+
+    void Grenade()
+    {
+        if (hasGrenades == 0)
+            return;
+
+        if (gDown && !isReload && !isSwap) // 마우스 방향으로 수류탄 던지기
+        {
+            // ScreenPointToRay() : 스크린에서 월드로 Ray를 쏘는 함수
+            Ray ray = followCamera.ScreenPointToRay(Input.mousePosition);
+            // RaycastHit 정보를 저장할 변수 추가
+            RaycastHit rayHit;
+            // out : return처럼 반환값을 주어진 변수에 저장하는 키워드
+            if (Physics.Raycast(ray, out rayHit, 100))
+            {
+                // RayCastHit의 마우스 클릭 위치 활용하여 회전을 구현
+                Vector3 nextVec = rayHit.point - transform.position;
+                // 살짝 위로 던지도록 astHit의 Y축 값좀 주기
+                nextVec.y = 10;
+
+                GameObject instantGrenade = Instantiate(grenadeObj, transform.position, transform.rotation);
+                Rigidbody rigidGrenade = instantGrenade.GetComponent<Rigidbody>();  // 생성된 수류탄의 리지드바디를 활용하여 던지는 로직 구현
+                rigidGrenade.AddForce(nextVec, ForceMode.Impulse); // 던지는 방향
+                rigidGrenade.AddTorque(Vector3.back * 10, ForceMode.Impulse); // 회전
+
+                hasGrenades--;
+                grenades[hasGrenades].SetActive(false);
+            }
         }
     }
 

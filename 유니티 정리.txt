@@ -125,3 +125,8 @@ DrawRay(시작 위치, 쏘는 방향, 색깔) : Scene내에서 Ray를 보여주�
 Raycast(시작 위치, 방향, 길이, 레이어마스크) : Ray를 쏘아 닿는 오브젝트를 감지하는 함수
 
 Material은  Mesh Renderer 컴포넌트에서 접근 가능
+
+프리펩 생성
+GameObject 변수 = Instantiate(프리펩, 위치, 각도)
+
+

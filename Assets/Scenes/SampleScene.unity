@@ -1510,10 +1510,15 @@ MonoBehaviour:
   hasWeapons: 000000
   grenades: []
   hasGrenades: 0
+  grenadeObj: {fileID: 4959341106758673242, guid: 1aef37061e09a1b47b393ac80aa340f4, type: 3}
   followCamera: {fileID: 963194227}
   ammo: 100
   coin: 0
   health: 0
+  maxAmmo: 0
+  maxCoin: 0
+  maxHealth: 0
+  maxHasGrenades: 0
 --- !u!136 &1571818559
 CapsuleCollider:
   m_ObjectHideFlags: 0
