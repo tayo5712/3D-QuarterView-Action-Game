@@ -43,11 +43,14 @@ Edit > Project Settings > Physics
 
 바닥 Rigidbody 설정
 Use Gravity 체크 해제
-Is Kinematic 체크 ( 직접 움직이지 않는 한 안 움직임 )
+IsKinematic 체크 ( 직접 움직이지 않는 한 안 움직임 )
 
 마찰력이 없는 벽을 만들기 위해 Physics Material 추가
 
 Invoke() 함수로 시간차 함수 호출
+
+RotateAround(위치, 회전축, 회전수치) : 타겟 주위를 회전하는 함수 
+// 목표가 움직이면 일그러지는 단점이 있음
 
 오브젝트 꾸미기
 - Light
@@ -60,6 +63,7 @@ Invoke() 함수로 시간차 함수 호출
 	(색상이 자홍색 이면 재질을 못 찾았다는 의미)
 	(Default-Line 연결)
 	Emission : 파티클 입자 출력양
+		- Rate over Distance : 파티클의 위치 변화에 따라 입자 생성
 	Shape : 파티클 입자 출력 모양
 	Color Over Life Time : 시간에 따른 색상변화
 	(아래쪽은 색, 위쪽은 투명도)
@@ -94,6 +98,7 @@ Trail Renderer : 잔상을 그려주는 컴포넌트
 		- yield 키워드를 여러개 사용하여 시간차 로직 작성 가능
 		- WaitForSeconds() : 주어진 수치만큼 기다리는 함수
 		- yield break로 코루틴 탈출
+	While문에는 꼭 yield return null을 포함
 
 프리펩 인스턴스 생성
 GameObject instant = Instantiate(프리펩, 위치, 각도);
@@ -115,6 +120,9 @@ Rigidbody 메서드
                 transform.LookAt(transform.position + nextVec);
             }
 
+상속 시 주의사항
+	Awake() 함수는 자식 스크립트만 단독 실행!
+
 Rigidbody
 AngularVelocity : 물리 회전 속도
 
@@ -128,5 +136,20 @@ Material은  Mesh Renderer 컴포넌트에서 접근 가능
 
 프리펩 생성
 GameObject 변수 = Instantiate(프리펩, 위치, 각도)
+
+구체 모양의 레이캐스팅 (모든 오브젝트)
+RaycastHit[] rayHits = Physics.SphereCastAll(위치, 반지름, 쏘는 방향, 레이를 쏘는 길이, 레이어 마스크)
+
+SetDestination() : 도착할 목표 위치 지정 함수
+# A.I.
+Nav 관련 클래스는 UnityEngine.AI 네임스페이스 사용 
+NavMeshAgent : Navigation을 사용하는 인공지능 컴포넌트
+NavAgent를 사용하기 위해선 NavMesh가 필요
+NavMesh : NavAgent가 경로를 그리기 위한 바탕 (Mesh)
+window > AI > Navigation
+Navigation 창에서 NavMesh를 Bake로 생성
+NavMesh는 Static 오브젝트만 Bake 가능
+Navigation의 Agent 세팅 값으로 NavMesh 결정
+
 
 

@@ -9,7 +9,7 @@ public class Player : MonoBehaviour
     // 플레이어의 무기관련 배열 함수 2개 선언
     public GameObject[] weapons;
     public bool[] hasWeapons;
-    public GameObject[] grenades;
+    public GameObject[] grenades; // 공전하는 물체를 컨트롤하기 위해 배열변수 생성
     public int hasGrenades;
     public GameObject grenadeObj;
     // 플레이어에 메인카메라 변수를 만들고 할당하기
@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     bool isFireReady = true;
     bool isReload;
     bool isBorder;
+    bool isDamage; // 무적타임을 위해서 추가
 
 
     Vector3 moveVec;
@@ -50,6 +51,7 @@ public class Player : MonoBehaviour
 
     Animator anim;
     Rigidbody rigid;
+    MeshRenderer[] meshs;
 
     // 트리거 된 아이템을 저장하기 위한 변수 선언
     GameObject nearObject;
@@ -64,6 +66,7 @@ public class Player : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         rigid = GetComponent<Rigidbody>();
         // 물리 효과를 위해 Rigidbody 변수 선언 후, 초기화
+        meshs = GetComponentsInChildren<MeshRenderer>();
     }
 
     void Start()
@@ -96,7 +99,7 @@ public class Player : MonoBehaviour
         jDown = Input.GetButtonDown("Jump");
         // 키보드를 누른 순간만 GetButtonDown
         fDown = Input.GetButton("Fire1");
-        gDown = Input.GetButton("Fire2");
+        gDown = Input.GetButtonDown("Fire2");
         rDown = Input.GetButtonDown("Reload");
 
         iDown = Input.GetButtonDown("Interaction");
@@ -199,7 +202,7 @@ public class Player : MonoBehaviour
             {
                 // RayCastHit의 마우스 클릭 위치 활용하여 회전을 구현
                 Vector3 nextVec = rayHit.point - transform.position;
-                // 살짝 위로 던지도록 astHit의 Y축 값좀 주기
+                // 살짝 위로 던지도록 Y축 값좀 주기
                 nextVec.y = 10;
 
                 GameObject instantGrenade = Instantiate(grenadeObj, transform.position, transform.rotation);
@@ -344,6 +347,85 @@ public class Player : MonoBehaviour
             anim.SetBool("isJump", false);
             isJump = false;
         }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Item")
+        {
+            Item item = other.GetComponent<Item>(); // 아이템 스크립트 가져오기
+            switch (item.type)
+            {
+                case Item.Type.Ammo:
+                    ammo += item.value;
+                    if (ammo > maxAmmo)
+                    {
+                        ammo = maxAmmo;
+                    }
+                    break;
+                case Item.Type.Coin:
+                    coin += item.value;
+                    if (coin > maxCoin)
+                    {
+                        coin = maxCoin;
+                    }
+                    break;
+                case Item.Type.Heart:
+                    health += item.value;
+                    if (health > maxHealth)
+                    {
+                        health = maxHealth;
+                    }
+                    break;
+                case Item.Type.Grenade:
+                    grenades[hasGrenades].SetActive(true); // 수류탄 개수대로 공전체가 활성화 되도록 구현
+                    hasGrenades += item.value;
+                    if (hasGrenades > maxHasGrenades)
+                    {
+                        hasGrenades = maxHasGrenades;
+                    }
+                    break;
+
+            }
+            Destroy(other.gameObject);
+        }
+        else if (other.tag == "EnemyBullet")
+        {
+            if (!isDamage)
+            {
+                Bullet enemyBullet = other.GetComponent<Bullet>();
+                health -= enemyBullet.damage;
+
+                bool isBossAtk = other.name == "Boss Melee Area";
+
+                StartCoroutine(OnDamage(isBossAtk));
+            }
+            if (other.GetComponent<Rigidbody>() != null)
+                Destroy(other.gameObject);
+        }
+    }
+
+    IEnumerator OnDamage(bool isBossAtk)
+    {
+        isDamage = true;
+        // 피격시 캐릭터를 이루고 있는 MeshRenderer들을 가져와서 색을 바꿈
+        foreach(MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.yellow;
+        }
+
+        if (isBossAtk)
+            rigid.AddForce(transform.forward * -25, ForceMode.Impulse); // 보스 점프공격 맞을 시 플레이어 넉백 효과 구현
+
+        yield return new WaitForSeconds(1f);
+        isDamage = false;
+        foreach(MeshRenderer mesh in meshs)
+        {
+            mesh.material.color = Color.white;
+        }
+
+        if (isBossAtk)
+            rigid.velocity = Vector3.zero;
     }
 
     void OnTriggerStay(Collider other)
