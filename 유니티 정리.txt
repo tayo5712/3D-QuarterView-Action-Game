@@ -151,5 +151,30 @@ Navigation 창에서 NavMesh를 Bake로 생성
 NavMesh는 Static 오브젝트만 Bake 가능
 Navigation의 Agent 세팅 값으로 NavMesh 결정
 
+# UI
+UI생성 : 하이어라키 + > UI > Canvas
+ - EventSystem : UI에서 키 입력을 결정해주는 컴포넌트
+
+Panel 생성 :  UI > Panel
+Image 생성 : UI > Image
+	- 이미지 추가 후 스프라이트를 Image > Source Image에 드래그하여 적용
+Text 생성 : UI > Legacy > Text
+	- Text의 크기를 무시하고 보여주려면 OverFlow 선택
+	- Text가 흐려 보일 때 : Text Scale의 값을 작게 할 수록 뚜렷한 느낌을 얻을 수 있다.
+Button 생성 : UI > Legacy > Button
+	- 이미지 깨져 보일 때 : Image Type(Simple) > Set Native Size > Image Type(Sliced)
+Set Native Size : UI 크기를 이미지 원래 크기로 맞추는 기능
+
+Canvas > Canvas > Pixel Perfect 체크 : sprite 도트 이미지 사용 시
+Canvas > Canvas Scaler > UI Scale Mode -> Scale With Screen Size (어느 해상도에서도 크기가 동일하게 출력)
+	해상도 설정 Reference Resolution - x : 1920, y : 1080
+
+
+Canvas 크기는 메인카메라 크기와 동일
+인게임 : 월드 좌표계 - Transform
+UI : 스크린 좌표계 - RectTransform
+
+
+
 
 
