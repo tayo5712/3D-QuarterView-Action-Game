@@ -169,10 +169,15 @@ Canvas > Canvas > Pixel Perfect 체크 : sprite 도트 이미지 사용 시
 Canvas > Canvas Scaler > UI Scale Mode -> Scale With Screen Size (어느 해상도에서도 크기가 동일하게 출력)
 	해상도 설정 Reference Resolution - x : 1920, y : 1080
 
-
+UI 생성 시 게임 오브젝트 크기는 0으로 만들기(위치만 잡아주기)
+기준점 위치에 따라서 크기가 작아지는 방향이 달라짐 (앵커로 기준점 잡기)
 Canvas 크기는 메인카메라 크기와 동일
 인게임 : 월드 좌표계 - Transform
 UI : 스크린 좌표계 - RectTransform
+앵커(Anchor) : UI 중심과 위치의 방향 기준
+	Shift : UI 중심
+	Alt : UI 위치
+
 
 
 
