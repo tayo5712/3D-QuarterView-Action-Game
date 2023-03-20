@@ -9,6 +9,9 @@ public class Enemy : MonoBehaviour
     public Type enemyType;
     public int maxHealth;
     public int curHealth;
+    public int score;
+    public GameManager manager;
+    public GameObject[] coins;
     public Transform target;
     public BoxCollider meleeArea;
     public GameObject bullet;
@@ -152,8 +155,7 @@ public class Enemy : MonoBehaviour
             curHealth -= weapon.damage;
             
             Vector3 reactVec = transform.position - other.transform.position;
-            Destroy(other.gameObject);
-            StartCoroutine(OnDamage(reactVec,false));
+            StartCoroutine(OnDamage(reactVec, false));
             Debug.Log("Melee : " + curHealth);
         }
         else if (other.tag == "Bullet")
@@ -197,6 +199,28 @@ public class Enemy : MonoBehaviour
             nav.enabled = false; // 사망 리액션을 유지하기 위해 NavAgent 비활성
             anim.SetTrigger("doDie");
 
+            // 적이 죽는 로직에 점수 부여와 동전 드랍 구현
+            Player player = target.GetComponent<Player>();
+            player.score += score;
+            int ranCoin = Random.Range(0, 3);
+            Instantiate(coins[ranCoin], transform.position, Quaternion.identity);
+
+            switch (enemyType)
+            {
+                case Type.A:
+                    manager.enemyCntA--;
+                    break;
+                case Type.B:
+                    manager.enemyCntB--;
+                    break;
+                case Type.C:
+                    manager.enemyCntC--;
+                    break;
+                case Type.D:
+                    manager.enemyCntD--;
+                    break;
+            }
+
             if (isGrenade)
             {
                 reactVec = reactVec.normalized;
@@ -214,9 +238,8 @@ public class Enemy : MonoBehaviour
                 // AddForce()함수로 넉백 구현하기
                 rigid.AddForce(reactVec * 5, ForceMode.Impulse);
             }
-
-            if(enemyType != Type.D)
-                Destroy(gameObject, 4);
+    
+            Destroy(gameObject, 4);
         }
     }
 

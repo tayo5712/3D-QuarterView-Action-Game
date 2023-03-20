@@ -21,6 +21,7 @@ transform 이동은 물리 충돌을 무시하는 경우가 발생
 애니메이션 상태 사이를 Transition 으로 연결
 파라메터(매개변수) 추가
 파라메터를 Condition에 사용하여 Transition 완성
+애니메이션 생성 시 Loop Time 체크
 
 LookAt() : 지정된 벡터를 향해서 회전시켜주는 함수
         // 우리가 나아가는 방향으로 바라본다.
@@ -152,6 +153,7 @@ NavMesh는 Static 오브젝트만 Bake 가능
 Navigation의 Agent 세팅 값으로 NavMesh 결정
 
 # UI
+UI 클래스 사용을 위해 UnityEngine.UI 네임스페이스 호출
 UI생성 : 하이어라키 + > UI > Canvas
  - EventSystem : UI에서 키 입력을 결정해주는 컴포넌트
 
@@ -177,9 +179,27 @@ UI : 스크린 좌표계 - RectTransform
 앵커(Anchor) : UI 중심과 위치의 방향 기준
 	Shift : UI 중심
 	Alt : UI 위치
+UI 화면 중앙에 띄우기 : ui(RectTransform형태).anchoredPosition = Vector3.zero
+Button에 On Click() 이벤트에 함수 연결 가능
+키보드 입력이 버튼을 클릭하지 않도록 Navigation 설정 (None으로 설정)
+this : 자기 자신에 접근할 때
 
+PlayerPrefs : 유니티에서 제공한는 간단한 저장 기능 (Float, Int, String 가능)
+	저장하기 : PlayerPrefs.SetInt("변수", 변수값);
+	불러오기 : PlayerPrefs.GetInt("변수", 변수값);
+첫 실행할 때는 PlayerPrefs의 Key 세팅 필요
 
+string.Format() : 함수로 문자열 양식 적용
+LateUpdate() : Update()가 끝난 후 호출되는 생명주기
+3D Text : 3D 공간의 텍스트 컴포넌트 (최신 버전 : 3D Object > Legacy > Text Mesh)
+Quaternion.identity : 회전 안줄 때
+프리펩은 Scene에 올라온 오브젝트에 접근 불가능
+while문을 안전하게 돌리기 위해서는 꼭 yield return 포함
 
+Scene 관련 함수를 사용하려면 SceneManagement 필요
+	LoadScene() : 씬을 다시 불러 재시작 구현 (SceneManager.LoadScene(0))
 
-
+AudioSource : 사운드 사용시
+	Play On Awake 해제
+	소리가 나야할 액션, 활동 로직에 Play() 함수 호출
 
