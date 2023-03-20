@@ -149,98 +149,100 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Melee")
+        if (!isDead)
         {
-            Weapon weapon = other.GetComponent<Weapon>();
-            curHealth -= weapon.damage;
-            
-            Vector3 reactVec = transform.position - other.transform.position;
-            StartCoroutine(OnDamage(reactVec, false));
-            Debug.Log("Melee : " + curHealth);
+            if (other.tag == "Melee")
+            {
+                Weapon weapon = other.GetComponent<Weapon>();
+                curHealth -= weapon.damage;
+                Vector3 reactVec = transform.position - other.transform.position;
+                StartCoroutine(OnDamage(reactVec, false));
+            }
+            else if (other.tag == "Bullet")
+            {
+                Bullet bullet = other.GetComponent<Bullet>();
+                curHealth -= bullet.damage;
+                Vector3 reactVec = transform.position - other.transform.position;
+                StartCoroutine(OnDamage(reactVec, false));
+            }
         }
-        else if (other.tag == "Bullet")
-        {
-            Bullet bullet = other.GetComponent<Bullet>();
-            curHealth -= bullet.damage;
-            Vector3 reactVec = transform.position - other.transform.position;
-            StartCoroutine(OnDamage(reactVec, false));
-            
 
-            Debug.Log("Range : " + curHealth);
-        }
     }
 
     public void HitByGrenade(Vector3 explosionPos)
     {
-        curHealth -= 100;
+        curHealth -= 200;
         Vector3 reactVec = transform.position - explosionPos;
         StartCoroutine(OnDamage(reactVec, true));
 
     }
     IEnumerator OnDamage(Vector3 reactVec, bool isGrenade)
     {
-        foreach(MeshRenderer mesh in meshes)
-            mesh.material.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-
-        if(curHealth > 0)
+        if (!isDead)
         {
-            foreach (MeshRenderer mesh in meshes)
-                mesh.material.color = Color.white;
-        }
-        else
-        {
-            foreach (MeshRenderer mesh in meshes)
-                mesh.material.color = Color.gray;
-            gameObject.layer = 14;
-            isDead = true;
-            isChase = false;
-            rigid.isKinematic = false;
-            nav.enabled = false; // 사망 리액션을 유지하기 위해 NavAgent 비활성
-            anim.SetTrigger("doDie");
-
-            // 적이 죽는 로직에 점수 부여와 동전 드랍 구현
-            Player player = target.GetComponent<Player>();
-            player.score += score;
-            int ranCoin = Random.Range(0, 3);
-            Instantiate(coins[ranCoin], transform.position, Quaternion.identity);
-
-            switch (enemyType)
+            if (curHealth > 0)
             {
-                case Type.A:
-                    manager.enemyCntA--;
-                    break;
-                case Type.B:
-                    manager.enemyCntB--;
-                    break;
-                case Type.C:
-                    manager.enemyCntC--;
-                    break;
-                case Type.D:
-                    manager.enemyCntD--;
-                    break;
-            }
-
-            if (isGrenade)
-            {
-                reactVec = reactVec.normalized;
-                reactVec += Vector3.up * 3;
-
-                rigid.freezeRotation = false; // 잠궈놓은 회전 풀기
-                rigid.AddForce(reactVec * 5, ForceMode.Impulse);
-                rigid.AddTorque(reactVec * 15, ForceMode.Impulse);
+                foreach (MeshRenderer mesh in meshes)
+                    mesh.material.color = Color.red;
+                yield return new WaitForSeconds(0.1f);
+                foreach (MeshRenderer mesh in meshes)
+                    mesh.material.color = Color.white;
             }
             else
             {
-                reactVec = reactVec.normalized; // 값 통일
-                reactVec += Vector3.up; // 위로 살짝 뜨도록 up 더해주기
+                foreach (MeshRenderer mesh in meshes)
+                    mesh.material.color = Color.gray;
+                gameObject.layer = 14;
+                isDead = true;
+                isChase = false;
+                rigid.isKinematic = false;
+                nav.enabled = false; // 사망 리액션을 유지하기 위해 NavAgent 비활성
+                anim.SetTrigger("doDie");
 
-                // AddForce()함수로 넉백 구현하기
-                rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+                // 적이 죽는 로직에 점수 부여와 동전 드랍 구현
+                Player player = target.GetComponent<Player>();
+                player.score += score;
+                int ranCoin = Random.Range(0, 3);
+                Instantiate(coins[ranCoin], transform.position, Quaternion.identity);
+
+                switch (enemyType)
+                {
+                    case Type.A:
+                        manager.enemyCntA--;
+                        break;
+                    case Type.B:
+                        manager.enemyCntB--;
+                        break;
+                    case Type.C:
+                        manager.enemyCntC--;
+                        break;
+                    case Type.D:
+                        manager.enemyCntD--;
+                        break;
+                }
+
+                if (isGrenade)
+                {
+                    reactVec = reactVec.normalized;
+                    reactVec += Vector3.up * 3;
+
+                    rigid.freezeRotation = false; // 잠궈놓은 회전 풀기
+                    rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+                    rigid.AddTorque(reactVec * 15, ForceMode.Impulse);
+                }
+                else
+                {
+                    reactVec = reactVec.normalized; // 값 통일
+                    reactVec += Vector3.up; // 위로 살짝 뜨도록 up 더해주기
+
+                    // AddForce()함수로 넉백 구현하기
+                    rigid.AddForce(reactVec * 5, ForceMode.Impulse);
+                }
+
+                Destroy(gameObject, 4);
             }
-    
-            Destroy(gameObject, 4);
         }
+       
     }
 
 }

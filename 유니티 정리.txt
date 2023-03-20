@@ -188,6 +188,7 @@ PlayerPrefs : 유니티에서 제공한는 간단한 저장 기능 (Float, Int, 
 	저장하기 : PlayerPrefs.SetInt("변수", 변수값);
 	불러오기 : PlayerPrefs.GetInt("변수", 변수값);
 첫 실행할 때는 PlayerPrefs의 Key 세팅 필요
+HasKey()함수로 Key가 있는지 확인 후, 없다면 0으로 저장
 
 string.Format() : 함수로 문자열 양식 적용
 LateUpdate() : Update()가 끝난 후 호출되는 생명주기
@@ -203,3 +204,5 @@ AudioSource : 사운드 사용시
 	Play On Awake 해제
 	소리가 나야할 액션, 활동 로직에 Play() 함수 호출
 
+빌드 시 게임에 들어갈 Scene을 Scenes in build에 추가
+Resolution 항목에서 해상도 조정

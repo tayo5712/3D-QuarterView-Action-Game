@@ -79,13 +79,14 @@ public class Boss : Enemy
         yield return new WaitForSeconds(0.2f);
         GameObject instantMissileA = Instantiate(missile, missilePortA.position, missilePortA.rotation);
         BossMissile bossMissileA = instantMissileA.GetComponent<BossMissile>(); // 미사일 스크립트까지 접근하여 목표물 설정해주기
+        Destroy(instantMissileA, 6f);
         bossMissileA.target = target;
 
         yield return new WaitForSeconds(0.3f);
         GameObject instantMissileB = Instantiate(missile, missilePortB.position, missilePortB.rotation);
         BossMissile bossMissileB = instantMissileB.GetComponent<BossMissile>(); 
         bossMissileB.target = target;
-
+        Destroy(instantMissileB, 6f);
         yield return new WaitForSeconds(2f);
 
         StartCoroutine(Think());

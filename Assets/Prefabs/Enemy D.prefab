@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7b2f4b0f84df8346a01c75cdb0a1ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 25
+  damage: 40
   isMelee: 1
   isRock: 0
 --- !u!1 &1603260705158400421
@@ -226,8 +226,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 3
-  maxHealth: 200
-  curHealth: 200
+  maxHealth: 1500
+  curHealth: 1500
   score: 2000
   manager: {fileID: 0}
   coins:

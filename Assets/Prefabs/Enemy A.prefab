@@ -143,6 +143,7 @@ MonoBehaviour:
   maxHealth: 50
   curHealth: 50
   score: 100
+  manager: {fileID: 0}
   coins:
   - {fileID: 5751739850972837328, guid: 8e82d70e7969b0e47bfead4ef6573cfe, type: 3}
   - {fileID: 5327733375465003938, guid: 50c76bad3d9c360488c0fd9998f60041, type: 3}

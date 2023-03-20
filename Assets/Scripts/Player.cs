@@ -71,8 +71,6 @@ public class Player : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
         // 물리 효과를 위해 Rigidbody 변수 선언 후, 초기화
         meshs = GetComponentsInChildren<MeshRenderer>();
-
-        PlayerPrefs.SetInt("MaxScore", 112500);
     }
 
     void Start()
