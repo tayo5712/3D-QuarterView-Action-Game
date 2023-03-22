@@ -153,7 +153,7 @@ NavMesh는 Static 오브젝트만 Bake 가능
 Navigation의 Agent 세팅 값으로 NavMesh 결정
 
 # UI
-UI 클래스 사용을 위해 UnityEngine.UI 네임스페이스 호출
+UI 클래스 사용을 위해 using UnityEngine.UI 네임스페이스 호출
 UI생성 : 하이어라키 + > UI > Canvas
  - EventSystem : UI에서 키 입력을 결정해주는 컴포넌트
 
@@ -170,6 +170,10 @@ Set Native Size : UI 크기를 이미지 원래 크기로 맞추는 기능
 Canvas > Canvas > Pixel Perfect 체크 : sprite 도트 이미지 사용 시
 Canvas > Canvas Scaler > UI Scale Mode -> Scale With Screen Size (어느 해상도에서도 크기가 동일하게 출력)
 	해상도 설정 Reference Resolution - x : 1920, y : 1080
+
+Text 대신 TextProMesh 사용시
+- 네임 스페이스 선언 using TMPro
+
 
 UI 생성 시 게임 오브젝트 크기는 0으로 만들기(위치만 잡아주기)
 기준점 위치에 따라서 크기가 작아지는 방향이 달라짐 (앵커로 기준점 잡기)
@@ -206,3 +210,6 @@ AudioSource : 사운드 사용시
 
 빌드 시 게임에 들어갈 Scene을 Scenes in build에 추가
 Resolution 항목에서 해상도 조정
+
+Find 관련 함수 사용 시 주의
+	: 바로 자기 자식까지 접근가능, 그 이상은 /로 구분지어서 타겟오브젝트까지 들어가야함

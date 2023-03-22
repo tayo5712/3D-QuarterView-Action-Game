@@ -51839,8 +51839,8 @@ MonoBehaviour:
   grenadeObj: {fileID: 4959341106758673242, guid: 1aef37061e09a1b47b393ac80aa340f4, type: 3}
   followCamera: {fileID: 963194227}
   manager: {fileID: 1479359770}
-  ammo: 100
-  coin: 2000
+  ammo: 150
+  coin: 100000
   health: 100
   maxAmmo: 999
   maxCoin: 99999

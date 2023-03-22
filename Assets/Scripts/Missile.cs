@@ -6,6 +6,6 @@ public class Missile : MonoBehaviour
 {
     void Update()
     {
-        transform.Rotate(Vector3.right * 30 * Time.deltaTime);
+        transform.Rotate(0, 90,0);
     }
 }
